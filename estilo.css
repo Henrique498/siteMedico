@@ -274,3 +274,128 @@ header .logo span {
         height: 50px !important;
     }
 }
+
+/* =============================================
+   RESPONSIVIDADE MOBILE
+   ============================================= */
+
+/* --- TABLET (até 900px) --- */
+@media (max-width: 900px) {
+
+  /* Header: empilha logo e menu */
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 20px;
+  }
+
+  header nav ul {
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+
+  /* Hero: títulos menores */
+  .hero h1,
+  .titulo-pagina h1 {
+    font-size: 1.9rem;
+  }
+
+  /* Grid de 2 colunas vira 1 coluna */
+  div[style*="grid-template-columns: 1fr 1fr"] {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+}
+
+/* --- MOBILE (até 600px) --- */
+@media (max-width: 600px) {
+
+  /* Header compacto */
+  header {
+    padding: 12px 16px;
+  }
+
+  header .logo {
+    min-width: unset !important;
+  }
+
+  header nav ul {
+    gap: 10px;
+  }
+
+  header nav a {
+    font-size: 0.85rem;
+  }
+
+  /* Hero */
+  .hero {
+    padding: 32px 16px;
+  }
+
+  .hero h1,
+  .titulo-pagina h1 {
+    font-size: 1.5rem;
+  }
+
+  .hero p,
+  .titulo-pagina p {
+    font-size: 0.95rem;
+  }
+
+  .botao {
+    padding: 12px 22px;
+    font-size: 0.9rem;
+  }
+
+  /* Seções */
+  .secao {
+    padding: 36px 0;
+  }
+
+  .secao h2 {
+    font-size: 1.4rem;
+  }
+
+  /* Cards */
+  .grade-cards {
+    grid-template-columns: 1fr !important;
+  }
+
+  .card {
+    padding: 20px;
+  }
+
+  /* Passo a passo (niveis.html) */
+  div[style*="min-width: 52px"] {
+    min-width: 40px !important;
+    height: 40px !important;
+    font-size: 1rem !important;
+  }
+
+  /* Estatísticas */
+  div[style*="grid-template-columns: repeat(auto-fit, minmax(200px"] {
+    grid-template-columns: 1fr 1fr !important;
+  }
+
+  /* Banner da página interna com logo */
+  .titulo-pagina div[style*="display: flex"] {
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+
+  .titulo-pagina img {
+    height: 60px !important;
+  }
+
+  /* Container lateral */
+  .container {
+    padding: 0 16px;
+  }
+
+  /* Footer */
+  footer {
+    font-size: 0.8rem;
+    padding: 20px 16px;
+  }
+}
