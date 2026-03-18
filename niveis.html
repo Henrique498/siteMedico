@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Triagem — Níveis de Urgência</title>
+  <link rel="stylesheet" href="estilo.css">
+
+  <!-- ESTILO EXCLUSIVO DESTA PÁGINA
+       Colocamos aqui o CSS que só a página de níveis usa -->
+  <style>
+
+    /* --- CARDS DE CORES DE TRIAGEM ---
+       Cada nível tem sua própria cor de fundo */
+    .card-nivel {
+      background: var(--cor-branco);
+      border-radius: 10px;
+      padding: 0;
+      box-shadow: var(--sombra);
+      overflow: hidden;
+      transition: transform 0.2s;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .card-nivel:hover {
+      transform: translateY(-4px);
+    }
+
+    /* Faixa colorida no topo de cada card */
+    .faixa {
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      color: white;
+    }
+
+    /* Ícone circular com número do nível */
+    .faixa .numero {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .faixa h3 { font-size: 1.1rem; }
+    .faixa .tempo { font-size: 0.85rem; opacity: 0.9; }
+
+    /* Corpo do card com a descrição */
+    .corpo-card {
+      padding: 20px 24px;
+    }
+
+    .corpo-card p { margin-bottom: 10px; font-size: 0.95rem; }
+    .corpo-card strong { color: var(--cor-primaria); }
+
+    /* Cores específicas de cada nível */
+    .nivel-vermelho .faixa { background-color: #c0392b; }
+    .nivel-laranja  .faixa { background-color: #e67e22; }
+    .nivel-amarelo  .faixa { background-color: #d4a017; color: white; }
+    .nivel-amarelo  .faixa .numero { background: rgba(255,255,255,0.25); color: white; }
+    .nivel-verde    .faixa { background-color: #27ae60; }
+    .nivel-azul     .faixa { background-color: #2980b9; }
+
+    /* Bordas laterais nos cards */
+    .nivel-vermelho { border-left: 5px solid #c0392b; }
+    .nivel-laranja  { border-left: 5px solid #e67e22; }
+    .nivel-amarelo  { border-left: 5px solid #f1c40f; }
+    .nivel-verde    { border-left: 5px solid #27ae60; }
+    .nivel-azul     { border-left: 5px solid #2980b9; }
+
+    /* --- SEÇÃO DE DETALHES EXPANDIDA ---
+       Aparece ao clicar em um card */
+    .detalhe {
+      display: none; /* começa escondido */
+      margin-top: 12px;
+      background: #f0f7ff;
+      border-radius: 6px;
+      padding: 14px 18px;
+      font-size: 0.92rem;
+      border-left: 4px solid var(--cor-primaria);
+    }
+
+    /* Classe que o JavaScript adiciona para mostrar o detalhe */
+    .detalhe.visivel {
+      display: block;
+    }
+
+    .dica-clique {
+      text-align: center;
+      color: #888;
+      font-size: 0.9rem;
+      margin-bottom: 20px;
+      font-style: italic;
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <!-- CABEÇALHO (igual em todas as páginas) -->
+  <header>
+  <a href="index.html" class="logo" style="display: flex; align-items: center; gap: 15px; text-decoration: none;">  
+    <img src="logo.png" alt="Logo triagem" style="height: 64px;">
+    <div style="display: flex; flex-direction: column; justify-content: center; line-height: 1.2;">
+      <span style="font-size: 0.62rem; font-weight: 700; color: white; font-family: 'Segoe UI', sans-serif; letter-spacing: 0.5px; text-transform: uppercase; opacity: 0.9;">Saúde com Protocolo de Manchester</span>
+      <span style="font-size: 1.15rem; font-weight: 900; font-family: 'Segoe UI', sans-serif; letter-spacing: 1px;">
+        <span style="color:#ff6b6b;">A</span> <span style="color:#ffa94d;">V</span><span style="color:#ffe066;">I</span><span style="color:#69db7c;">D</span><span style="color:#74c0fc;">A</span><span style="color:white; font-weight:700; font-size:0.95rem;"> em </span><span style="color:#ff6b6b;">C</span><span style="color:#ffa94d;">O</span><span style="color:#69db7c;">R</span><span style="color:#74c0fc;">E</span><span style="color:#da77f2;">S</span>
+      </span>
+    </div>
+  </a>
+  <nav>
+    <ul>
+      <li><a href="index.html">Início</a></li>
+      <li><a href="niveis.html" class="ativo">Níveis de Urgência</a></li>
+      <li><a href="orientacoes.html">Orientações</a></li>
+      <li><a href="localizacao.html">Localização</a></li>
+    </ul>
+  </nav>
+</header>
+
+
+  <!-- BANNER DA PÁGINA -->
+  <section class="titulo-pagina">
+    <div style="display: flex; align-items: center; justify-content: center; gap: 15px;">
+        <img src="logo2.png" alt="Logo Triagem" style="height: 85px;">
+        <h1>Níveis de Urgência</h1>
+    </div>
+    <p style="text-align: center;">O Protocolo de Manchester usa 5 cores para classificar cada paciente.</p>
+</section>
+
+
+  <!-- SEÇÃO PRINCIPAL: os 5 cards de nível -->
+  <section class="secao">
+    <div class="container">
+
+      <p class="dica-clique">👆 Clique em qualquer card para ver exemplos de situações</p>
+
+      <div class="grade-cards">
+
+        <!-- ======= NÍVEL 1 — VERMELHO ======= -->
+        <div class="card-nivel nivel-vermelho" onclick="alternarDetalhe('det-vermelho')">
+          <!-- onclick chama a função JS ao clicar no card -->
+          
+          <div class="faixa">
+            <div class="numero">1</div>
+            <div>
+              <h3>🔴 Emergência</h3>
+              <div class="tempo">Atendimento imediato</div>
+            </div>
+          </div>
+
+          <div class="corpo-card">
+            <p>Risco imediato de morte. O paciente é atendido <strong>na hora</strong>.</p>
+
+            <!-- Detalhe oculto, aparece ao clicar -->
+            <div class="exemplo-box">
+            <strong>Exemplos:</strong><br>
+    Parada cardíaca · Parada respiratória · Inconsciência · Hemorragia grave · Convulsão em curso
+            </div>
+           </div>
+              </div>
+
+
+        <!-- ======= NÍVEL 2 — LARANJA ======= -->
+        <div class="card-nivel nivel-laranja" onclick="alternarDetalhe('det-laranja')">
+          
+          <div class="faixa">
+            <div class="numero">2</div>
+            <div>
+              <h3>🟠 Muito Urgente</h3>
+              <div class="tempo">Até 10 minutos</div>
+            </div>
+          </div>
+
+          <div class="corpo-card">
+            <p>Situação grave com risco de deterioração rápida.</p>
+
+            <div class="exemplo-box" id="det-laranja">
+              <strong>Exemplos:</strong><br>
+              Dor no peito intensa · Dificuldade respiratória grave ·
+              Alteração de consciência · AVC com sintomas recentes
+            </div>
+          </div>
+        </div>
+
+
+        <!-- ======= NÍVEL 3 — AMARELO ======= -->
+        <div class="card-nivel nivel-amarelo" onclick="alternarDetalhe('det-amarelo')">
+          
+          <div class="faixa">
+            <div class="numero">3</div>
+            <div>
+              <h3>🟡 Urgente</h3>
+              <div class="tempo">Até 30 minutos</div>
+            </div>
+          </div>
+
+          <div class="corpo-card">
+            <p>Condição importante, mas estável por enquanto.</p>
+
+            <div class="exemplo-box" id="det-amarelo">
+              <strong>Exemplos:</strong><br>
+              Dor abdominal moderada · Febre alta · Vômitos repetidos ·
+              Fratura sem comprometimento vascular
+            </div>
+          </div>
+        </div>
+
+
+        <!-- ======= NÍVEL 4 — VERDE ======= -->
+        <div class="card-nivel nivel-verde" onclick="alternarDetalhe('det-verde')">
+          
+          <div class="faixa">
+            <div class="numero">4</div>
+            <div>
+              <h3>🟢 Pouco Urgente</h3>
+              <div class="tempo">Até 60 minutos</div>
+            </div>
+          </div>
+
+          <div class="corpo-card">
+            <p>Condição crônica ou recorrente, sem risco imediato.</p>
+
+            <div class="exemplo-box" id="det-verde">
+              <strong>Exemplos:</strong><br>
+              Dor leve · Pequenos cortes · Tosse sem outros sintomas ·
+              Resfriado comum · Dor de garganta
+            </div>
+          </div>
+        </div>
+
+
+        <!-- ======= NÍVEL 5 — AZUL ======= -->
+        <div class="card-nivel nivel-azul" onclick="alternarDetalhe('det-azul')">
+          
+          <div class="faixa">
+            <div class="numero">5</div>
+            <div>
+              <h3>🔵 Não Urgente</h3>
+              <div class="tempo">Até 120 minutos</div>
+            </div>
+          </div>
+
+          <div class="corpo-card">
+            <p>Situação que poderia ser atendida em consulta de rotina.</p>
+
+            <div class="exemplo-box" id="det-azul">
+              <strong>Exemplos:</strong><br>
+              Renovação de receita · Resultados de exames ·
+              Dor crônica já acompanhada · Problemas administrativos
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <!-- fim da grade-cards -->
+
+
+      <!-- CAIXA DE AVISO -->
+      <div class="destaque">
+        ⚠️ <strong>Atenção:</strong> Em caso de dúvida, sempre procure
+        orientação de um profissional de saúde. Não tente se
+        autodiagnosticar em situações de emergência.
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- SEÇÃO: COMO FUNCIONA A TRIAGEM PASSO A PASSO -->
+  <section class="secao" style="padding-top: 0;">
+    <div class="container">
+      <h2>🔄 Como Funciona a Triagem — Passo a Passo</h2>
+      <p class="subtitulo">Da chegada ao hospital até o atendimento médico, entenda cada etapa.</p>
+
+      <div style="display: flex; flex-direction: column; gap: 0;">
+
+        <div style="display: flex; gap: 20px; align-items: flex-start; padding: 24px 0; border-bottom: 1px solid #e0e0e0;">
+          <div style="min-width: 52px; height: 52px; border-radius: 50%; background: #023e8a; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; font-weight: 900; flex-shrink: 0;">1</div>
+          <div>
+            <h3 style="color:#023e8a; margin-bottom: 6px;">🚪 Chegada e Recepção</h3>
+            <p>O paciente chega ao pronto-socorro e é direcionado imediatamente à sala de triagem — <strong>sem precisar pegar senha ou aguardar na fila</strong> antes disso.</p>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 20px; align-items: flex-start; padding: 24px 0; border-bottom: 1px solid #e0e0e0;">
+          <div style="min-width: 52px; height: 52px; border-radius: 50%; background: #0077b6; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; font-weight: 900; flex-shrink: 0;">2</div>
+          <div>
+            <h3 style="color:#0077b6; margin-bottom: 6px;">👩‍⚕️ Avaliação pela Enfermagem</h3>
+            <p>Um enfermeiro treinado avalia o paciente em até <strong>5 minutos</strong>. Ele mede sinais vitais (pressão, temperatura, saturação) e faz perguntas sobre os sintomas.</p>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 20px; align-items: flex-start; padding: 24px 0; border-bottom: 1px solid #e0e0e0;">
+          <div style="min-width: 52px; height: 52px; border-radius: 50%; background: #00b4d8; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; font-weight: 900; flex-shrink: 0;">3</div>
+          <div>
+            <h3 style="color:#00b4d8; margin-bottom: 6px;">🎨 Classificação por Cor</h3>
+            <p>Com base nos dados coletados, o enfermeiro atribui uma das <strong>5 cores do Protocolo de Manchester</strong>. Essa cor define o tempo máximo de espera do paciente.</p>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 20px; align-items: flex-start; padding: 24px 0; border-bottom: 1px solid #e0e0e0;">
+          <div style="min-width: 52px; height: 52px; border-radius: 50%; background: #27ae60; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; font-weight: 900; flex-shrink: 0;">4</div>
+          <div>
+            <h3 style="color:#27ae60; margin-bottom: 6px;">⏳ Espera Monitorada</h3>
+            <p>O paciente aguarda na área adequada ao seu nível. A equipe <strong>reavalia periodicamente</strong> quem está esperando — se o quadro piorar, a classificação pode mudar.</p>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 20px; align-items: flex-start; padding: 24px 0;">
+          <div style="min-width: 52px; height: 52px; border-radius: 50%; background: #c0392b; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; font-weight: 900; flex-shrink: 0;">5</div>
+          <div>
+            <h3 style="color:#c0392b; margin-bottom: 6px;">🩺 Atendimento Médico</h3>
+            <p>O médico atende o paciente dentro do tempo previsto para sua cor. A partir daí, começa o diagnóstico, exames e tratamento.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- RODAPÉ -->
+  <footer>
+    <p>Triagem Hospitalar &nbsp;|&nbsp; Fontes: Ministério da Saúde · CFM · Protocolo de Manchester</p>
+  </footer>
+
+
+  <!-- =====================
+       JAVASCRIPT
+       Função para mostrar/esconder os detalhes dos cards
+       ===================== -->
+  <script>
+
+    // Esta função recebe o ID do elemento de detalhe
+    // e alterna entre mostrar e esconder
+    function alternarDetalhe(idElemento) {
+
+      // Seleciona o elemento pelo ID
+      const detalhe = document.getElementById(idElemento);
+
+      // "classList.toggle" adiciona a classe se não tiver,
+      // e remove se já tiver — alternando o estado
+      detalhe.classList.toggle('visivel');
+    }
+
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Triagem — Localização</title>
+  <link rel="stylesheet" href="estilo.css">
+  
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  
+  <style>
+    #map {
+      height: 450px;
+      width: 100%;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      border: 2px solid #007bff;
+      margin-bottom: 20px;
+    }
+    .status-msg {
+      text-align: center;
+      padding: 15px;
+      margin-bottom: 20px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      font-weight: bold;
+      color: #333;
+      border: 1px solid #ddd;
+    }
+    .info-local {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-bottom: 15px;
+      position: relative;
+      width: 100%;
+      box-sizing: border-box;
+      border-left: 5px solid #007bff;
+    }
+    .info-local h2 { margin-top: 0; font-size: 1.2rem; color: #333; }
+    .info-local p { margin: 5px 0; font-size: 0.95rem; }
+    .distancia { font-size: 0.85rem; color: #666; font-weight: bold; }
+    #lista-locais {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    
+    /* Estilos para os botões de fallback (Google Maps / SAMU) */
+    .botoes-externos {
+      display: none; /* Escondido até achar a localização */
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      border: 1px solid #eee;
+      margin-top: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    .botoes-externos p {
+      text-align: center;
+      font-size: 0.9rem;
+      color: #666;
+      margin-top: 0;
+      margin-bottom: 15px;
+      font-weight: bold;
+    }
+    .grid-botoes {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .btn-acao {
+      flex: 1;
+      min-width: 150px;
+      padding: 12px;
+      text-align: center;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 0.9rem;
+      transition: opacity 0.2s;
+    }
+    .btn-acao:hover { opacity: 0.8; }
+    .btn-outline {
+      border: 2px solid #e5e7eb;
+      color: #374151;
+      background: #f9fafb;
+    }
+    .btn-urgencia {
+      background: #dc2626;
+      color: white;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+  <a href="index.html" class="logo" style="display: flex; align-items: center; gap: 15px; text-decoration: none;">  
+    <img src="logo.png" alt="Logo triagem" style="height: 64px;">
+    <div style="display: flex; flex-direction: column; justify-content: center; line-height: 1.2;">
+      <span style="font-size: 0.62rem; font-weight: 700; color: white; font-family: 'Segoe UI', sans-serif; letter-spacing: 0.5px; text-transform: uppercase; opacity: 0.9;">Saúde com Protocolo de Manchester</span>
+      <span style="font-size: 1.15rem; font-weight: 900; font-family: 'Segoe UI', sans-serif; letter-spacing: 1px;">
+        <span style="color:#ff6b6b;">A</span> <span style="color:#ffa94d;">V</span><span style="color:#ffe066;">I</span><span style="color:#69db7c;">D</span><span style="color:#74c0fc;">A</span><span style="color:white; font-weight:700; font-size:0.95rem;"> em </span><span style="color:#ff6b6b;">C</span><span style="color:#ffa94d;">O</span><span style="color:#69db7c;">R</span><span style="color:#74c0fc;">E</span><span style="color:#da77f2;">S</span>
+      </span>
+    </div>
+  </a>
+  <nav>
+    <ul>
+      <li><a href="index.html">Início</a></li>
+      <li><a href="niveis.html">Níveis de Urgência</a></li>
+      <li><a href="orientacoes.html">Orientações</a></li>
+      <li><a href="localizacao.html" class="ativo">Localização</a></li>
+    </ul>
+  </nav>
+</header>
+
+  <section class="titulo-pagina">
+    <h1 style="text-align: center;">📍 Locais de Atendimento</h1>
+    <p style="text-align: center;">UPAs e hospitais próximos a você.</p>
+  </section>
+
+  <section class="secao">
+    <div class="container" style="max-width: 800px; margin: 0 auto;">
+      
+      <div id="status" class="status-msg">Solicitando permissão de localização...</div>
+
+      <div id="map"></div>
+
+      <div id="botoes-externos" class="botoes-externos">
+        <p>Buscar diretamente no Google Maps:</p>
+        <div class="grid-botoes">
+          <a id="link-upa" href="#" target="_blank" class="btn-acao btn-outline">🏥 UPAs próximas</a>
+          <a id="link-hospital" href="#" target="_blank" class="btn-acao btn-outline">🚑 Hospitais próximos</a>
+          <a href="tel:192" class="btn-acao btn-urgencia">📞 SAMU (192)</a>
+        </div>
+      </div>
+
+      <div id="lista-locais" style="margin-top: 20px;"></div>
+
+    </div>
+  </section>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    const RADIUS = 5000; // 5km
+    const statusEl = document.getElementById('status');
+    const listaLocaisEl = document.getElementById('lista-locais');
+    const botoesExternosEl = document.getElementById('botoes-externos');
+    const linkUpa = document.getElementById('link-upa');
+    const linkHospital = document.getElementById('link-hospital');
+    
+    // Inicializa o mapa
+    let map = L.map('map').setView([-23.5505, -46.6333], 13);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    function getDistance(lat1, lon1, lat2, lon2) {
+      const R = 6371000;
+      const dLat = (lat2 - lat1) * Math.PI / 180;
+      const dLon = (lon2 - lon1) * Math.PI / 180;
+      const a = Math.sin(dLat / 2) ** 2 +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon / 2) ** 2;
+      return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    }
+
+    // Busca focada em nomenclaturas do Brasil
+    async function fetchNearbyPlaces(lat, lon) {
+      const query = `[out:json][timeout:30];
+        (
+          node["amenity"~"hospital|clinic"](around:${RADIUS},${lat},${lon});
+          way["amenity"~"hospital|clinic"](around:${RADIUS},${lat},${lon});
+          node["healthcare"](around:${RADIUS},${lat},${lon});
+          node["name"~"UPA|UBS|Pronto Socorro|Hospital|Saúde|AMA",i](around:${RADIUS},${lat},${lon});
+        );
+        out center;`;
+
+      try {
+        const res = await fetch('https://overpass-api.de/api/interpreter', {
+          method: 'POST',
+          body: query,
+        });
+        const data = await res.json();
+        
+        const seen = new Set();
+        let results = data.elements.map(el => {
+          const placeLat = el.lat ?? el.center?.lat;
+          const placeLon = el.lon ?? el.center?.lon;
+          if (!placeLat || !placeLon) return null;
+          
+          const name = el.tags?.name || el.tags?.['name:pt'] || 'Unidade de Saúde';
+          const key = `${name}-${Math.round(placeLat * 100)}-${Math.round(placeLon * 100)}`;
+          
+          if (seen.has(key)) return null;
+          seen.add(key);
+
+          return {
+            name,
+            lat: placeLat,
+            lon: placeLon,
+            address: [el.tags?.['addr:street'], el.tags?.['addr:housenumber']].filter(Boolean).join(', ') || 'Endereço não informado no mapa',
+            distance: getDistance(lat, lon, placeLat, placeLon)
+          };
+        })
+        .filter(Boolean)
+        .sort((a, b) => a.distance - b.distance)
+        .slice(0, 10); 
+
+        return results;
+
+      } catch (error) {
+        console.error("Erro ao buscar:", error);
+        return [];
+      }
+    }
+
+    function renderPlaces(places) {
+      listaLocaisEl.innerHTML = ''; 
+      
+      if (places.length === 0) {
+        statusEl.innerText = "Nenhum local mapeado no sistema em um raio de 5km. Use os botões do Google Maps abaixo.";
+        statusEl.style.background = "#fff3cd";
+        statusEl.style.color = "#856404";
+        statusEl.style.borderColor = "#ffeeba";
+        return;
+      }
+
+      statusEl.innerText = `${places.length} local(is) encontrado(s) em até 5km.`;
+      statusEl.style.background = "#d4edda";
+      statusEl.style.color = "#155724";
+      statusEl.style.borderColor = "#c3e6cb";
+
+      places.forEach(place => {
+        L.marker([place.lat, place.lon]).addTo(map)
+         .bindPopup(`<b>${place.name}</b><br>${(place.distance / 1000).toFixed(1)} km daqui`);
+
+        const card = document.createElement('div');
+        card.className = 'info-local';
+        card.innerHTML = `
+          <h2>${place.name}</h2>
+          <p class="distancia">📍 a ${(place.distance / 1000).toFixed(1)} km de você</p>
+          <p><strong>Endereço:</strong> ${place.address}</p>
+          <a href="https://www.google.com/maps/dir/?api=1&destination=${place.lat},${place.lon}" target="_blank" class="btn-acao btn-outline" style="display:inline-block; margin-top: 10px; background-color: #007bff; color: white; padding: 8px 15px;">📍 Traçar Rota</a>
+        `;
+        listaLocaisEl.appendChild(card);
+      });
+    }
+
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const userLat = position.coords.latitude;
+          const userLon = position.coords.longitude;
+
+          // Atualiza mapa e bota o pino do usuário
+          map.setView([userLat, userLon], 14);
+          L.circleMarker([userLat, userLon], {
+            color: 'red', fillColor: '#f03', fillOpacity: 0.8, radius: 8
+          }).addTo(map).bindPopup("Você está aqui!").openPopup();
+
+          // Configura e mostra os botões do Google Maps com a localização exata do usuário
+          linkUpa.href = `https://www.google.com/maps/search/UPA/@${userLat},${userLon},14z`;
+          linkHospital.href = `https://www.google.com/maps/search/Hospital/@${userLat},${userLon},14z`;
+          botoesExternosEl.style.display = 'block';
+
+          statusEl.innerText = "Buscando unidades de saúde próximas...";
+
+          // Busca os locais na API
+          const places = await fetchNearbyPlaces(userLat, userLon);
+          renderPlaces(places);
+        },
+        (error) => {
+          statusEl.innerText = "Precisamos da sua localização para mostrar os hospitais próximos.";
+          statusEl.style.background = "#f8d7da";
+          statusEl.style.color = "#721c24";
+        },
+        { enableHighAccuracy: true, timeout: 10000 }
+      );
+    } else {
+      statusEl.innerText = "Geolocalização não suportada.";
+    }
+  </script>
+
+  <!-- SEÇÃO SIMULADOR DE TRIAGEM COM IA -->
+  <section class="secao" style="padding-top: 0;">
+    <div class="container" style="max-width: 800px; margin: 0 auto;">
+      <h2>🤖 Simulador de Triagem</h2>
+      <p class="subtitulo">Descreva seus sintomas e descubra qual nível de urgência pode se aplicar ao seu caso. <strong>Isso não substitui avaliação médica.</strong></p>
+
+      <div style="background:white; border-radius:12px; padding:28px; box-shadow:0 2px 12px rgba(3,4,94,0.10);">
+        <div id="sim-chat" style="display:flex; flex-direction:column; gap:12px; margin-bottom:20px; min-height:60px;"></div>
+
+        <div style="display:flex; gap:10px;">
+          <textarea id="sim-input" rows="2" placeholder="Ex: Estou com dor forte no peito e dificuldade para respirar..."
+            style="flex:1; border:2px solid #023e8a; border-radius:8px; padding:12px; font-size:0.95rem; font-family:inherit; resize:none; outline:none;"></textarea>
+          <button onclick="simularTriagem()" id="sim-btn"
+            style="background:#023e8a; color:white; border:none; border-radius:8px; padding:12px 20px; font-size:1rem; font-weight:700; cursor:pointer; white-space:nowrap;">
+            Analisar →
+          </button>
+        </div>
+        <p style="font-size:0.8rem; color:#888; margin-top:10px;">⚠️ Este simulador é apenas educativo. Em caso de dúvida, procure atendimento médico imediatamente.</p>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    async function simularTriagem() {
+      const input = document.getElementById('sim-input');
+      const btn = document.getElementById('sim-btn');
+      const chat = document.getElementById('sim-chat');
+      const texto = input.value.trim();
+      if (!texto) return;
+
+      // Mostra mensagem do usuário
+      chat.innerHTML += `<div style="align-self:flex-end; background:#023e8a; color:white; border-radius:12px 12px 2px 12px; padding:12px 16px; max-width:80%; font-size:0.93rem;">${texto}</div>`;
+      input.value = '';
+      btn.disabled = true;
+      btn.textContent = 'Analisando...';
+
+      // Indicador de digitação
+      const typing = document.createElement('div');
+      typing.id = 'typing';
+      typing.style = 'align-self:flex-start; background:#f0f7ff; border-radius:12px 12px 12px 2px; padding:12px 16px; color:#666; font-size:0.93rem;';
+      typing.textContent = '⏳ Analisando sintomas...';
+      chat.appendChild(typing);
+      chat.scrollTop = chat.scrollHeight;
+
+      try {
+        const response = await fetch("https://api.anthropic.com/v1/messages", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            model: "claude-sonnet-4-20250514",
+            max_tokens: 1000,
+            system: `Você é um assistente educativo sobre o Protocolo de Manchester de triagem hospitalar. 
+Analise os sintomas descritos e classifique em uma das 5 cores do protocolo:
+🔴 VERMELHO — Emergência (atendimento imediato)
+🟠 LARANJA — Muito Urgente (até 10 min)
+🟡 AMARELO — Urgente (até 30 min)
+🟢 VERDE — Pouco Urgente (até 60 min)
+🔵 AZUL — Não Urgente (até 120 min)
+
+Responda em português brasileiro de forma clara e empática. Estruture assim:
+1. A cor e nível sugerido (em negrito)
+2. Breve justificativa (2-3 frases)
+3. O que fazer agora (1-2 frases práticas)
+4. Lembrete que isso é educativo e não substitui avaliação médica
+
+Seja direto e objetivo. Máximo 150 palavras.`,
+            messages: [{ role: "user", content: `Sintomas: ${texto}` }]
+          })
+        });
+
+        const data = await response.json();
+        const resposta = data.content?.map(b => b.text || '').join('') || 'Não foi possível analisar. Por favor, procure atendimento médico.';
+
+        typing.remove();
+        chat.innerHTML += `<div style="align-self:flex-start; background:#f0f7ff; border-radius:12px 12px 12px 2px; padding:14px 18px; max-width:85%; font-size:0.93rem; border-left:4px solid #023e8a; line-height:1.6;">${resposta.replace(/\n/g, '<br>')}</div>`;
+
+      } catch (e) {
+        typing.remove();
+        chat.innerHTML += `<div style="align-self:flex-start; background:#f8d7da; border-radius:12px; padding:12px 16px; font-size:0.93rem; color:#721c24;">Erro ao conectar. Em caso de emergência, ligue 192 (SAMU).</div>`;
+      }
+
+      btn.disabled = false;
+      btn.textContent = 'Analisar →';
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    document.getElementById('sim-input').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); simularTriagem(); }
+    });
+  </script>
+
+</body>
+</html>

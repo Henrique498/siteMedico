@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<!-- DOCTYPE diz ao navegador que este é um documento HTML5 -->
+<html lang="pt-BR">
+<!-- lang="pt-BR" ajuda leitores de tela e buscadores -->
+
+<head>
+  <!-- HEAD: informações sobre a página (não aparece na tela) -->
+  <meta charset="UTF-8">
+  <!-- charset=UTF-8 permite usar letras com acento -->
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- viewport faz o site se adaptar a celulares -->
+  
+  <title>Triagem Hospitalar — Início</title>
+  <!-- Aparece na aba do navegador -->
+
+  <link rel="stylesheet" href="estilo.css">
+  <!-- Carrega o arquivo de estilos compartilhado -->
+</head>
+
+<body>
+  <!-- BODY: tudo que aparece na tela começa aqui -->
+
+  <!-- =====================
+       CABEÇALHO (HEADER)
+       Aparece em todas as páginas
+       ===================== -->
+  <header>
+  <a href="index.html" class="logo" style="display: flex; align-items: center; gap: 15px; text-decoration: none;">  
+    <img src="logo.png" alt="Logo triagem" style="height: 64px;">
+    <div style="display: flex; flex-direction: column; justify-content: center; line-height: 1.2;">
+      <span style="font-size: 0.62rem; font-weight: 700; color: white; font-family: 'Segoe UI', sans-serif; letter-spacing: 0.5px; text-transform: uppercase; opacity: 0.9;">Saúde com Protocolo de Manchester</span>
+      <span style="font-size: 1.15rem; font-weight: 900; font-family: 'Segoe UI', sans-serif; letter-spacing: 1px;">
+        <span style="color:#ff6b6b;">A</span> <span style="color:#ffa94d;">V</span><span style="color:#ffe066;">I</span><span style="color:#69db7c;">D</span><span style="color:#74c0fc;">A</span><span style="color:white; font-weight:700; font-size:0.95rem;"> em </span><span style="color:#ff6b6b;">C</span><span style="color:#ffa94d;">O</span><span style="color:#69db7c;">R</span><span style="color:#74c0fc;">E</span><span style="color:#da77f2;">S</span>
+      </span>
+    </div>
+  </a>
+  <nav>
+    <ul>
+      <li><a href="index.html">Início</a></li>
+      <li><a href="niveis.html">Níveis de Urgência</a></li>
+      <li><a href="orientacoes.html">Orientações</a></li>
+      <li><a href="localizacao.html">Localização</a></li>
+    </ul>
+  </nav>
+</header>
+
+
+  <!-- =====================
+       HERO — Banner principal
+       Primeira coisa que o usuário vê
+       ===================== -->
+  <section class="hero">
+    <div class="container">
+      <h1>Triagem de Urgência e Emergência</h1>
+      <p>
+        Entenda como funciona o sistema que organiza o atendimento
+        hospitalar e salva vidas todos os dias.
+      </p>
+      <!-- Botão que leva à página de níveis -->
+      <a href="niveis.html" class="botao">Conheça os Níveis de Urgência</a>
+    </div>
+  </section>
+
+
+  <!-- =====================
+       SEÇÃO DE CARDS
+       3 cards com resumo das páginas do site
+       ===================== -->
+  <section class="secao">
+    <div class="container">
+
+      <h2>O que você vai aprender</h2>
+      <p class="subtitulo">Explore as seções do site para entender cada parte do sistema de triagem.</p>
+
+      <!-- grade-cards cria uma grade responsiva de cartões -->
+      <div class="grade-cards">
+
+        <!-- Card 1 -->
+        <div class="card">
+          <div class="icone">🔍</div>
+          <h3>O que é Triagem?</h3>
+          <p>
+            Triagem é o processo de classificar pacientes pelo
+            grau de urgência. Veja como surgiu e por que é essencial.
+          </p>
+          <br>
+          <a href="niveis.html">Saiba mais →</a>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="card">
+          <div class="icone">🎨</div>
+          <h3>Níveis de Gravidade</h3>
+          <p>
+            O sistema usa 5 cores para classificar cada paciente.
+            Cada cor indica um tempo máximo de espera.
+          </p>
+          <br>
+          <a href="niveis.html">Ver as cores →</a>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="card">
+          <div class="icone">🚑</div>
+          <h3>Quando ir à Emergência?</h3>
+          <p>
+            Nem toda dor exige o pronto-socorro. Saiba identificar
+            sinais que pedem atenção imediata.
+          </p>
+          <br>
+          <a href="orientacoes.html">Ver orientações →</a>
+        </div>
+
+      </div>
+      <!-- fim da grade-cards -->
+
+    </div>
+  </section>
+
+
+  <!-- =====================
+       HISTÓRIA DO PROTOCOLO
+       ===================== -->
+  <section class="secao" style="padding-top: 0;">
+    <div class="container">
+      <h2>📖 A História do Protocolo de Manchester</h2>
+      <p class="subtitulo">Como nasceu o sistema que organiza emergências no mundo inteiro.</p>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: start;">
+        <div>
+          <p style="margin-bottom: 14px;">
+            No final dos anos 1990, os prontos-socorros do Reino Unido enfrentavam uma crise séria: 
+            filas intermináveis, pacientes graves esperando junto com casos simples, e profissionais 
+            sem um critério claro de quem atender primeiro.
+          </p>
+          <p style="margin-bottom: 14px;">
+            Em <strong>1994</strong>, um grupo de médicos e enfermeiros da cidade de 
+            <strong>Manchester, na Inglaterra</strong>, se reuniu para criar um protocolo padronizado. 
+            O objetivo era simples: garantir que o paciente mais grave fosse sempre atendido primeiro, 
+            independente de onde estivesse sendo atendido.
+          </p>
+          <p>
+            O resultado foi o <strong>Sistema de Triagem de Manchester (MTS)</strong> — 
+            adotado hoje em mais de 30 países, incluindo o Brasil, Portugal e grande parte da Europa.
+          </p>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 14px;">
+          <div style="background: #f0f7ff; border-left: 4px solid #023e8a; border-radius: 6px; padding: 18px;">
+            <strong style="color:#023e8a;">🗓️ 1994</strong>
+            <p style="margin-top: 6px; font-size: 0.93rem;">Criação do protocolo em Manchester, Inglaterra, por um grupo multiprofissional de saúde.</p>
+          </div>
+          <div style="background: #f0f7ff; border-left: 4px solid #0077b6; border-radius: 6px; padding: 18px;">
+            <strong style="color:#0077b6;">🌍 Anos 2000</strong>
+            <p style="margin-top: 6px; font-size: 0.93rem;">Expansão para Portugal, Brasil e mais de 30 países. Traduzido para diversas línguas.</p>
+          </div>
+          <div style="background: #f0f7ff; border-left: 4px solid #00b4d8; border-radius: 6px; padding: 18px;">
+            <strong style="color:#00b4d8;">🏥 Hoje</strong>
+            <p style="margin-top: 6px; font-size: 0.93rem;">Usado em milhares de hospitais. Base para treinamento de profissionais de saúde no mundo todo.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================
+       ESTATÍSTICAS DO SUS
+       ===================== -->
+  <section class="secao" style="padding-top: 0;">
+    <div class="container">
+      <h2>📊 Emergências no Brasil — Dados do SUS</h2>
+      <p class="subtitulo">Números que mostram a importância de usar os serviços de saúde corretamente.</p>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 32px;">
+        <div style="background: white; border-radius: 12px; padding: 28px; text-align: center; box-shadow: 0 2px 12px rgba(3,4,94,0.10); border-top: 4px solid #c0392b;">
+          <div style="font-size: 2.4rem; font-weight: 900; color: #c0392b;">60%</div>
+          <p style="font-size: 0.9rem; color: #555; margin-top: 8px;">das visitas a prontos-socorros <strong>não são emergências reais</strong></p>
+        </div>
+        <div style="background: white; border-radius: 12px; padding: 28px; text-align: center; box-shadow: 0 2px 12px rgba(3,4,94,0.10); border-top: 4px solid #e67e22;">
+          <div style="font-size: 2.4rem; font-weight: 900; color: #e67e22;">1 bilhão</div>
+          <p style="font-size: 0.9rem; color: #555; margin-top: 8px;">de atendimentos realizados pelo SUS <strong>por ano</strong></p>
+        </div>
+        <div style="background: white; border-radius: 12px; padding: 28px; text-align: center; box-shadow: 0 2px 12px rgba(3,4,94,0.10); border-top: 4px solid #27ae60;">
+          <div style="font-size: 2.4rem; font-weight: 900; color: #27ae60;">30+</div>
+          <p style="font-size: 0.9rem; color: #555; margin-top: 8px;">países que adotam o <strong>Protocolo de Manchester</strong></p>
+        </div>
+        <div style="background: white; border-radius: 12px; padding: 28px; text-align: center; box-shadow: 0 2px 12px rgba(3,4,94,0.10); border-top: 4px solid #2980b9;">
+          <div style="font-size: 2.4rem; font-weight: 900; color: #2980b9;">5 min</div>
+          <p style="font-size: 0.9rem; color: #555; margin-top: 8px;">é o tempo médio de triagem <strong>por paciente</strong></p>
+        </div>
+      </div>
+
+      <div class="destaque">
+        💡 <strong>Você sabia?</strong>
+        Estima-se que cerca de 60% das visitas a prontos-socorros
+        no Brasil não são emergências reais. Entender a triagem
+        ajuda a usar os serviços de saúde de forma mais inteligente.
+        Fonte: Ministério da Saúde / DATASUS.
+      </div>
+    </div>
+  </section>
+  <!-- =====================
+       RODAPÉ (FOOTER)
+       ===================== -->
+  <footer>
+    <p>Triagem Hospitalar &nbsp;|&nbsp; Fontes: Ministério da Saúde · CFM · Protocolo de Manchester</p>
+  </footer>
+
+  <script>
+    // Pega o nome do arquivo atual (ex: "index.html")
+    const paginaAtual = window.location.pathname.split('/').pop();
+
+    // Seleciona todos os links do menu
+    const linksMenu = document.querySelectorAll('header nav a');
+
+    // Para cada link, verifica se ele aponta para a página atual
+    linksMenu.forEach(function(link) {
+      // Remove a classe "ativo" de todos os links
+      link.classList.remove('ativo');
+
+      // Se o link bate com a página atual, adiciona "ativo"
+      if (link.getAttribute('href') === paginaAtual) {
+        link.classList.add('ativo');
+      }
+    });
+  </script>
+
+</body>
+</html>

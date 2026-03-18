@@ -1,0 +1,276 @@
+/* =============================================
+   ESTILO.CSS — Folha de estilos compartilhada
+   Usada pelas 3 páginas do site
+   ============================================= */
+
+/* --- 1. RESET E VARIÁVEIS DE COR ---
+   Aqui definimos as cores principais do site
+   usando "variáveis CSS" (--nome-da-cor).
+   Isso facilita mudar a cor em um só lugar. */
+:root {
+  --cor-primaria: #023e8a;   /* deep-twilight — header, títulos */
+  --cor-acento:   #0077b6;   /* bright-teal-blue — botões, links ativos */
+  --cor-fundo:    #f1faee;   /* light-cyan — fundo das páginas */
+  --cor-texto:    #03045e;   /* deep-twilight — texto corrido */
+  --cor-branco:   #ffffff;
+  --sombra: 0 2px 12px rgba(3,4,94,0.10);
+}
+/* Remove margens padrão do navegador */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box; /* inclui borda no tamanho do elemento */
+}
+
+/* Fonte padrão do corpo da página */
+body {
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  background-color: var(--cor-fundo);
+  color: var(--cor-texto);
+  line-height: 1.7; /* espaçamento entre linhas */
+}
+
+/* --- 2. CABEÇALHO (HEADER) ---
+   Aparece no topo de todas as páginas */
+header {
+  background-color: var(--cor-primaria);
+  padding: 16px 40px;
+  display: flex;               /* coloca logo e menu lado a lado */
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;            /* fica fixo ao rolar a página */
+  top: 0;
+  z-index: 100;
+  box-shadow: var(--sombra);
+}
+
+/* Logo / nome do site no header */
+header .logo {
+  color: var(--cor-branco);
+  font-size: 1.4rem;
+  font-weight: 700;
+  text-decoration: none;
+  letter-spacing: 1px;
+}
+
+/* Lista de links do menu de navegação */
+header nav ul {
+  list-style: none;   /* remove os pontinhos da lista */
+  display: flex;
+  gap: 28px;          /* espaço entre os links */
+}
+
+header nav a {
+  color: rgba(255,255,255,0.85);
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: 0.2s;
+  /* Adicionamos uma borda transparente aqui para o espaço já existir */
+  border-bottom: 2px solid transparent; 
+  padding-bottom: 2px;
+}
+
+/* 2. Agora, o hover e o ativo apenas mudam a cor da borda que já existe */
+header nav a:hover,
+header nav a.ativo {
+  color: var(--cor-branco);
+  border-bottom: 2px solid var(--cor-acento);
+}
+
+/* --- 3. CONTAINER CENTRAL ---
+   Limita a largura do conteúdo e centraliza */
+.container {
+  max-width: 1250px;
+  margin: 0 auto;      /* centraliza horizontalmente */
+  padding: 0 24px;
+}
+
+/* --- 4. SEÇÃO HERO (banner principal da Home) --- */
+/* Substitua o .hero atual */
+.hero {
+  background: linear-gradient(135deg, #023e8a 0%, #0077b6 60%, #00b4d8 100%);
+  color: var(--cor-branco);
+  padding: 48px 24px;
+  text-align: center;
+}
+
+.hero h1 {
+  font-size: 2.6rem;
+  margin-bottom: 16px;
+}
+
+.hero p {
+  font-size: 1.15rem;
+  max-width: 600px;
+  margin: 0 auto 32px;
+  opacity: 0.9;
+}
+
+/* Botão principal */
+.botao {
+  display: inline-block;
+  background-color: transparent;
+  color: var(--cor-branco);
+  padding: 14px 32px;
+  border-radius: 6px;
+  border: 2px solid var(--cor-branco);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.botao:hover {
+  background-color: rgba(255,255,255,0.2);
+  transform: translateY(-2px);
+}
+
+/* --- 5. SEÇÃO GENÉRICA --- */
+.secao {
+  padding: 60px 0;
+}
+
+.secao h2 {
+  font-size: 1.8rem;
+  color: var(--cor-primaria);
+  margin-bottom: 12px;
+}
+
+.secao .subtitulo {
+  color: #666;
+  margin-bottom: 36px;
+  font-size: 1.05rem;
+}
+
+/* --- 6. CARDS (cartões informativos) ---
+   Usados na home e em outras páginas */
+.grade-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(224px, 1fr)); 
+  gap: 20px;
+  margin-top: 20px;
+  align-items: stretch;
+}
+
+.exemplo-box {
+  margin-top: 15px;
+  background-color: #f0f7ff; /* Azul bem clarinho */
+  border-left: 3px solid #023e8a; /* Borda lateral azul escura */
+  padding: 12px;
+  border-radius: 0 4px 4px 0;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  color: #333;
+}
+
+.exemplo-box strong {
+  color: #c0392b; /* Cor vermelha para destacar a palavra "Exemplos:" */
+  display: block;
+  margin-bottom: 4px;
+}
+
+.card {
+  background: var(--cor-branco);
+  border-radius: 10px;
+  padding: 28px;
+  box-shadow: var(--sombra);
+  border-top: 4px solid var(--cor-primaria);
+  transition: transform 0.2s;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.card:hover {
+  transform: translateY(-4px); /* efeito de "levantar" */
+}
+
+.card .icone {
+  font-size: 2.2rem;
+  margin-bottom: 12px;
+}
+
+.card h3 {
+  font-size: 1.15rem;
+  color: var(--cor-primaria);
+  margin-bottom: 8px;
+}
+
+/* --- 7. CAIXA DE DESTAQUE ---
+   Caixa colorida para informações importantes */
+.destaque {
+  background: #90e0ef;
+  border-left: 5px solid #023e8a;
+  padding: 20px 24px;
+  border-radius: 6px;
+  margin: 40px 0;
+  font-size: 1.05rem;
+}
+
+/* --- 8. RODAPÉ (FOOTER) --- */
+footer {
+  background-color: var(--cor-primaria);
+  color: rgba(255,255,255,0.75);
+  text-align: center;
+  padding: 28px 24px;
+  margin-top: 60px;
+  font-size: 0.9rem;
+}
+
+footer a {
+  color: rgba(255,255,255,0.9);
+}
+
+/* --- 9. TÍTULOS DE PÁGINA ---
+   Banner azul com título no topo das páginas internas */
+.titulo-pagina {
+  background: linear-gradient(135deg, #023e8a 0%, #0077b6 60%, #00b4d8 100%);
+  color: var(--cor-branco);
+  padding: 80px 24px;
+  text-align: center;
+}
+
+.titulo-pagina h1 {
+  font-size: 2.6rem;
+  margin-bottom: 16px;
+}
+
+.titulo-pagina p {
+  opacity: 0.85;
+  font-size: 1.15rem;
+}
+
+.logo img {
+    height: 40px; /* Ajuste a altura conforme preferir */
+    width: auto;
+    display: block;
+}
+
+/* Força o alinhamento do cabeçalho para aceitar o texto ao lado da imagem */
+header .logo {
+    display: flex !important;
+    align-items: center !important;
+    gap: 15px !important;
+    text-decoration: none !important;
+    width: auto !important; /* Impede que a logo fique espremida */
+    min-width: 300px; /* Garante espaço para o texto */
+}
+
+/* Estilo do nome do site */
+header .logo span {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: white;
+    white-space: nowrap;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+}
+
+/* Ajuste para celulares: se o nome for grande demais, ele diminui */
+@media (max-width: 600px) {
+    header .logo span {
+        font-size: 1.2rem;
+    }
+    header .logo img {
+        height: 50px !important;
+    }
+}

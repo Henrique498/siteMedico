@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Triagem — Orientações</title>
+  <link rel="stylesheet" href="estilo.css">
+
+  <!-- ESTILOS EXCLUSIVOS DESTA PÁGINA -->
+  <style>
+
+    /* --- DOIS BLOCOS LADO A LADO ---
+       "ir agora" e "pode esperar" ficam em colunas */
+    .grade-dois {
+      display: grid;
+      grid-template-columns: 1fr 1fr; /* duas colunas iguais */
+      gap: 24px;
+      margin-top: 20px;
+    }
+
+    /* Em celular, as colunas viram linhas */
+    @media (max-width: 600px) {
+      .grade-dois { grid-template-columns: 1fr; }
+    }
+
+    /* Bloco vermelho: ir agora */
+    .bloco-urgente {
+      background: #fff5f5;
+      border-radius: 10px;
+      padding: 24px;
+      border-top: 5px solid #c0392b;
+    }
+
+    .bloco-urgente h3 { color: #c0392b; margin-bottom: 14px; }
+
+    /* Bloco verde: pode esperar */
+    .bloco-esperar {
+      background: #f0fff4;
+      border-radius: 10px;
+      padding: 24px;
+      border-top: 5px solid #27ae60;
+    }
+
+    .bloco-esperar h3 { color: #27ae60; margin-bottom: 14px; }
+
+    /* Lista sem pontinhos, com ícone manual */
+    .lista-sinais {
+      list-style: none;
+    }
+
+    .lista-sinais li {
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(0,0,0,0.07);
+      font-size: 0.95rem;
+    }
+
+    .lista-sinais li:last-child { border-bottom: none; }
+
+    /* --- ACORDEÃO (perguntas e respostas clicáveis) --- */
+    .acordeao {
+      margin-top: 16px;
+    }
+
+    /* Cada item do acordeão */
+    .item-acordeao {
+      background: var(--cor-branco);
+      border-radius: 8px;
+      margin-bottom: 10px;
+      box-shadow: var(--sombra);
+      overflow: hidden;
+    }
+
+    /* Botão da pergunta */
+    .btn-pergunta {
+      width: 100%;          /* ocupa toda a largura */
+      text-align: left;
+      background: none;
+      border: none;
+      padding: 18px 20px;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--cor-primaria);
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background-color 0.15s;
+    }
+
+    .btn-pergunta:hover { background-color: #f0f7ff; }
+
+    /* Ícone "+" que vira "−" ao abrir */
+    .btn-pergunta .seta {
+      font-size: 1.3rem;
+      transition: transform 0.25s;
+    }
+
+    /* Quando aberto, rotaciona o ícone */
+    .item-acordeao.aberto .seta {
+      transform: rotate(45deg);
+    }
+
+    /* Resposta do acordeão — começa escondida */
+    .resposta {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease, padding 0.3s ease; /* animação suave de abertura */
+      padding: 0 20px;
+      color: #444;
+      font-size: 0.95rem;
+    }
+
+    /* Quando aberta, define a altura máxima */
+    .item-acordeao.aberto .resposta {
+      max-height: 200px;
+      padding: 0 20px 18px;
+    }
+
+    /* --- TABELA COMPARATIVA --- */
+    .tabela-servicos {
+      width: 100%;
+      border-collapse: collapse; /* remove espaço entre células */
+      margin-top: 16px;
+      font-size: 0.95rem;
+    }
+
+    .tabela-servicos th {
+      background-color: var(--cor-primaria);
+      color: white;
+      padding: 12px 16px;
+      text-align: left;
+    }
+
+    .tabela-servicos td {
+      padding: 12px 16px;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    /* Linhas alternadas para facilitar a leitura */
+    .tabela-servicos tr:nth-child(even) td {
+      background-color: #f5f5f5;
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <!-- CABEÇALHO -->
+  <header>
+  <a href="index.html" class="logo" style="display: flex; align-items: center; gap: 15px; text-decoration: none;">  
+    <img src="logo.png" alt="Logo triagem" style="height: 64px;">
+    <div style="display: flex; flex-direction: column; justify-content: center; line-height: 1.2;">
+      <span style="font-size: 0.62rem; font-weight: 700; color: white; font-family: 'Segoe UI', sans-serif; letter-spacing: 0.5px; text-transform: uppercase; opacity: 0.9;">Saúde com Protocolo de Manchester</span>
+      <span style="font-size: 1.15rem; font-weight: 900; font-family: 'Segoe UI', sans-serif; letter-spacing: 1px;">
+        <span style="color:#ff6b6b;">A</span> <span style="color:#ffa94d;">V</span><span style="color:#ffe066;">I</span><span style="color:#69db7c;">D</span><span style="color:#74c0fc;">A</span><span style="color:white; font-weight:700; font-size:0.95rem;"> em </span><span style="color:#ff6b6b;">C</span><span style="color:#ffa94d;">O</span><span style="color:#69db7c;">R</span><span style="color:#74c0fc;">E</span><span style="color:#da77f2;">S</span>
+      </span>
+    </div>
+  </a>
+  <nav>
+    <ul>
+      <li><a href="index.html">Início</a></li>
+      <li><a href="niveis.html">Níveis de Urgência</a></li>
+      <li><a href="orientacoes.html" class="ativo">Orientações</a></li>
+      <li><a href="localizacao.html">Localização</a></li>
+    </ul>
+  </nav>
+</header>
+
+
+  <!-- BANNER DA PÁGINA -->
+  <section class="titulo-pagina">
+    <h1>🚑 Quando Procurar Emergência?</h1>
+    <p>Saiba identificar sinais de alerta e usar os serviços certos.</p>
+  </section>
+
+
+  <!-- SEÇÃO 1: IR AGORA vs PODE ESPERAR -->
+  <section class="secao">
+    <div class="container">
+
+      <h2>Reconheça os sinais</h2>
+      <p class="subtitulo">Alguns sintomas exigem atenção imediata. Outros podem aguardar uma consulta.</p>
+
+      <div class="grade-dois">
+
+        <!-- BLOCO: IR AGORA -->
+        <div class="bloco-urgente">
+          <h3>🚨 Ir à Emergência Agora</h3>
+          <ul class="lista-sinais">
+            <li>💔 Dor forte no peito ou no braço esquerdo</li>
+            <li>😮 Dificuldade para respirar</li>
+            <li>🧠 Confusão mental repentina ou desmaio</li>
+            <li>🩸 Sangramento intenso que não para</li>
+            <li>⚡ Convulsão</li>
+            <li>🤕 Traumatismo craniano com perda de consciência</li>
+            <li>😶 Boca ou rosto tortos, dificuldade de falar (sinal de AVC)</li>
+          </ul>
+        </div>
+
+        <!-- BLOCO: PODE ESPERAR -->
+        <div class="bloco-esperar">
+          <h3>⏳ Pode Aguardar ou Ir à UPA</h3>
+          <ul class="lista-sinais">
+            <li>🤧 Resfriado ou gripe sem complicações</li>
+            <li>🌡️ Febre baixa (abaixo de 38°C em adultos)</li>
+            <li>🦷 Dor de dente sem inchaço intenso</li>
+            <li>🩹 Cortes pequenos que param de sangrar</li>
+            <li>😴 Cansaço crônico ou dores musculares leves</li>
+            <li>💊 Renovação de receita ou pedido de atestado</li>
+          </ul>
+        </div>
+
+      </div>
+      <!-- fim da grade-dois -->
+
+    </div>
+  </section>
+
+
+  <!-- SEÇÃO 2: TABELA DE SERVIÇOS -->
+  <section class="secao" style="padding-top: 0;">
+    <div class="container">
+
+      <h2>Qual serviço usar?</h2>
+      <p class="subtitulo">Escolha o serviço certo para não sobrecarregar o sistema de saúde.</p>
+
+      <table class="tabela-servicos">
+        <thead>
+          <tr>
+            <th>Serviço</th>
+            <th>Quando usar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>🏥 Pronto-Socorro (PS)</strong></td>
+            <td>Emergências com risco de vida (níveis vermelho e laranja)</td>
+          </tr>
+          <tr>
+            <td><strong>🏨 UPA (Unidade de Pronto Atendimento)</strong></td>
+            <td>Urgências moderadas que não podem esperar uma consulta (níveis amarelo e verde)</td>
+          </tr>
+          <tr>
+            <td><strong>🏪 UBS (Posto de Saúde)</strong></td>
+            <td>Consultas de rotina, prevenção, doenças crônicas (nível azul e verde)</td>
+          </tr>
+          <tr>
+            <td><strong>📞 SAMU (192)</strong></td>
+            <td>Quando o paciente não pode ser transportado com segurança</td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+  </section>
+
+
+  <!-- SEÇÃO 3: MITOS E VERDADES (ACORDEÃO) -->
+  <section class="secao" style="padding-top: 0;">
+    <div class="container">
+
+      <h2>perguntas frequentes</h2>
+      <p class="subtitulo">Clique em cada pergunta para ver a resposta.</p>
+
+      <div class="acordeao">
+
+        <!-- Item 1 do acordeão -->
+        <div class="item-acordeao">
+          <button class="btn-pergunta" onclick="alternarAcordeao(this)">
+            "Se eu esperar muito, serei atendido mais rápido?"
+            <span class="seta">+</span>
+          </button>
+          <div class="resposta">
+            Não. A triagem prioriza pela <strong>gravidade</strong>, não pela
+            ordem de chegada. Pacientes em risco de vida são atendidos primeiro,
+            independente de quando chegaram.
+          </div>
+        </div>
+
+        <!-- Item 2 do acordeão -->
+        <div class="item-acordeao">
+          <button class="btn-pergunta" onclick="alternarAcordeao(this)">
+            "Pronto-socorro é o lugar certo para pegar atestado?"
+            <span class="seta">+</span>
+          </button>
+          <div class="resposta">
+            Não. O pronto-socorro é para urgências e emergências.
+            Para atestados, consultas de rotina ou renovação de receitas,
+            procure uma UBS ou consultório médico. Usar o PS desnecessariamente
+            prejudica quem realmente precisa.
+          </div>
+        </div>
+
+        <!-- Item 3 do acordeão -->
+        <div class="item-acordeao">
+          <button class="btn-pergunta" onclick="alternarAcordeao(this)">
+            "Febre alta é sempre uma emergência?"
+            <span class="seta">+</span>
+          </button>
+          <div class="resposta">
+            Depende. Em adultos, febre acima de 39°C com outros sintomas
+            graves pode indicar urgência. Em bebês abaixo de 3 meses,
+            qualquer febre é motivo para consulta imediata. Sempre avalie
+            o contexto e outros sintomas presentes.
+          </div>
+        </div>
+
+        <!-- Item 4 do acordeão -->
+        <div class="item-acordeao">
+          <button class="btn-pergunta" onclick="alternarAcordeao(this)">
+            "Dor no peito é sempre ataque cardíaco?"
+            <span class="seta">+</span>
+          </button>
+          <div class="resposta">
+            Não necessariamente, mas dor no peito <strong>nunca deve ser ignorada</strong>.
+            Pode ser muscular, gástrica ou ansiedade — mas também pode ser
+            cardíaca. Na dúvida, procure atendimento médico imediatamente.
+          </div>
+        </div>
+
+      </div>
+      <!-- fim do acordeão -->
+
+    </div>
+  </section>
+
+
+  <!-- SEÇÃO QUIZ -->
+  <section class="secao" style="padding-top: 0;">
+    <div class="container">
+      <h2>🧠 Quiz — Mitos e Verdades</h2>
+      <p class="subtitulo">Teste seu conhecimento sobre emergências. Clique em Verdade ou Mito para cada afirmação!</p>
+
+      <div id="quiz-container" style="display: flex; flex-direction: column; gap: 16px;"></div>
+
+      <div id="quiz-resultado" style="display:none; margin-top: 28px; background: #f0f7ff; border-radius: 10px; padding: 24px; text-align: center; border: 2px solid #023e8a;">
+        <div style="font-size: 2rem; margin-bottom: 8px;" id="quiz-emoji"></div>
+        <h3 style="color:#023e8a;" id="quiz-pontos"></h3>
+        <p id="quiz-mensagem" style="color:#444; margin-top: 8px;"></p>
+        <button onclick="reiniciarQuiz()" style="margin-top: 16px; background:#023e8a; color:white; border:none; padding: 12px 28px; border-radius: 6px; cursor:pointer; font-size:1rem; font-weight:600;">🔄 Tentar novamente</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- RODAPÉ -->
+  <footer>
+    <p>Triagem Hospitalar &nbsp;|&nbsp; Fontes: Ministério da Saúde · CFM · Protocolo de Manchester</p>
+  </footer>
+
+  <script>
+    function alternarAcordeao(botao) {
+      const item = botao.parentElement;
+      item.classList.toggle('aberto');
+    }
+
+    // ---- QUIZ ----
+    const perguntas = [
+      { texto: "O paciente que chega primeiro ao PS é sempre atendido primeiro.", resposta: false, explicacao: "Mito! A triagem prioriza pela gravidade, não pela ordem de chegada." },
+      { texto: "Febre em bebês abaixo de 3 meses é sempre motivo de consulta urgente.", resposta: true, explicacao: "Verdade! Em bebês tão pequenos, qualquer febre pode ser sinal de infecção grave." },
+      { texto: "Dor no peito pode indicar problema cardíaco e nunca deve ser ignorada.", resposta: true, explicacao: "Verdade! Mesmo que não seja cardíaco, dor no peito sempre merece avaliação médica." },
+      { texto: "O pronto-socorro é o lugar certo para renovar receitas médicas.", resposta: false, explicacao: "Mito! Para receitas e atestados, procure uma UBS ou consultório. O PS é para urgências e emergências." },
+      { texto: "O enfermeiro pode classificar o paciente sem a presença do médico.", resposta: true, explicacao: "Verdade! A triagem é uma atribuição do enfermeiro, treinado especificamente para isso." },
+      { texto: "Um paciente classificado como verde pode ser reclassificado se piorar.", resposta: true, explicacao: "Verdade! A equipe monitora quem aguarda e pode mudar a classificação a qualquer momento." },
+      { texto: "O SAMU (192) deve ser chamado apenas para acidentes de trânsito.", resposta: false, explicacao: "Mito! O SAMU atende qualquer emergência médica onde o paciente não possa ser transportado com segurança." },
+    ];
+
+    let respostas = new Array(perguntas.length).fill(null);
+
+    function renderQuiz() {
+      const container = document.getElementById('quiz-container');
+      container.innerHTML = '';
+      perguntas.forEach((p, i) => {
+        const respondida = respostas[i] !== null;
+        const acertou = respondida && respostas[i] === p.resposta;
+        container.innerHTML += `
+          <div style="background:white; border-radius:10px; padding:20px 24px; box-shadow:0 2px 12px rgba(3,4,94,0.08); border-left: 5px solid ${respondida ? (acertou ? '#27ae60' : '#c0392b') : '#023e8a'};">
+            <p style="font-weight:600; margin-bottom:14px; color:#03045e;">${i + 1}. ${p.texto}</p>
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+              <button onclick="responder(${i}, true)" ${respondida ? 'disabled' : ''}
+                style="padding:9px 22px; border-radius:6px; border:2px solid #27ae60; background:${respostas[i]===true ? '#27ae60' : 'white'}; color:${respostas[i]===true ? 'white' : '#27ae60'}; font-weight:700; cursor:${respondida?'default':'pointer'}; font-size:0.95rem;">
+                ✅ Verdade
+              </button>
+              <button onclick="responder(${i}, false)" ${respondida ? 'disabled' : ''}
+                style="padding:9px 22px; border-radius:6px; border:2px solid #c0392b; background:${respostas[i]===false ? '#c0392b' : 'white'}; color:${respostas[i]===false ? 'white' : '#c0392b'}; font-weight:700; cursor:${respondida?'default':'pointer'}; font-size:0.95rem;">
+                ❌ Mito
+              </button>
+            </div>
+            ${respondida ? `<p style="margin-top:12px; font-size:0.9rem; padding:10px 14px; border-radius:6px; background:${acertou?'#d4edda':'#f8d7da'}; color:${acertou?'#155724':'#721c24'};">${acertou ? '✅ Correto! ' : '❌ Incorreto. '}${p.explicacao}</p>` : ''}
+          </div>`;
+      });
+      if (respostas.every(r => r !== null)) mostrarResultado();
+    }
+
+    function responder(i, valor) {
+      respostas[i] = valor;
+      renderQuiz();
+    }
+
+    function mostrarResultado() {
+      const acertos = respostas.filter((r, i) => r === perguntas[i].resposta).length;
+      const total = perguntas.length;
+      const pct = Math.round((acertos / total) * 100);
+      const el = document.getElementById('quiz-resultado');
+      el.style.display = 'block';
+      document.getElementById('quiz-emoji').textContent = pct === 100 ? '🏆' : pct >= 70 ? '👏' : '📚';
+      document.getElementById('quiz-pontos').textContent = `Você acertou ${acertos} de ${total} (${pct}%)`;
+      document.getElementById('quiz-mensagem').textContent =
+        pct === 100 ? 'Parabéns! Você domina o tema!' :
+        pct >= 70 ? 'Muito bem! Você está bem informado sobre saúde.' :
+        'Que tal explorar mais o site para aprender sobre triagem?';
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function reiniciarQuiz() {
+      respostas = new Array(perguntas.length).fill(null);
+      document.getElementById('quiz-resultado').style.display = 'none';
+      renderQuiz();
+      document.getElementById('quiz-container').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    renderQuiz();
+  </script>
+
+</body>
+</html>
