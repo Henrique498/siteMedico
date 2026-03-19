@@ -154,6 +154,268 @@
     </div>
   </section>
 
+  <!-- ===================== QUIZ INFORMATIVO ===================== -->
+  <section class="secao" style="padding-top:0;" id="quiz-section">
+    <div class="container">
+      <h2>🧠 Teste seus Conhecimentos</h2>
+      <p class="subtitulo">Quiz informativo — descubra se você sabe quando buscar o atendimento certo!</p>
+
+      <div id="quiz-container" style="max-width:720px;margin:0 auto;">
+
+        <!-- Barra de progresso -->
+        <div style="background:#e9ecef;border-radius:99px;height:10px;margin-bottom:28px;overflow:hidden;">
+          <div id="quiz-progress-bar" style="height:100%;width:0%;background:linear-gradient(90deg,var(--cor-primaria),#0096c7);border-radius:99px;transition:width 0.5s ease;"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:0.82rem;color:#6c757d;margin-top:-20px;margin-bottom:20px;">
+          <span id="quiz-label-current">Pergunta 1 de 5</span>
+          <span id="quiz-score-label">✅ Acertos: 0</span>
+        </div>
+
+        <!-- Card da pergunta -->
+        <div id="quiz-card" style="background:white;border-radius:16px;padding:32px;box-shadow:0 4px 24px rgba(3,4,94,0.12);animation:fadeInUp 0.4s ease;">
+
+          <p id="quiz-pergunta" style="font-size:1.1rem;font-weight:700;color:var(--cor-primaria);margin-bottom:24px;line-height:1.5;"></p>
+
+          <div id="quiz-opcoes" style="display:flex;flex-direction:column;gap:12px;"></div>
+
+          <div id="quiz-feedback" style="display:none;margin-top:20px;padding:16px 20px;border-radius:10px;font-size:0.95rem;line-height:1.55;"></div>
+
+          <button id="quiz-btn-next" onclick="proximaPergunta()" style="display:none;margin-top:20px;background:var(--cor-primaria);color:white;border:none;border-radius:10px;padding:12px 28px;font-size:1rem;font-weight:700;cursor:pointer;width:100%;transition:background 0.2s;">
+            Próxima Pergunta →
+          </button>
+        </div>
+
+        <!-- Resultado final (hidden) -->
+        <div id="quiz-resultado" style="display:none;background:white;border-radius:16px;padding:36px;box-shadow:0 4px 24px rgba(3,4,94,0.12);text-align:center;">
+          <div id="resultado-emoji" style="font-size:3.5rem;margin-bottom:12px;"></div>
+          <h3 id="resultado-titulo" style="font-size:1.5rem;font-weight:900;color:var(--cor-primaria);margin-bottom:8px;"></h3>
+          <p id="resultado-msg" style="font-size:1rem;color:#495057;margin-bottom:24px;line-height:1.6;"></p>
+          <div id="resultado-pontos" style="font-size:2rem;font-weight:900;color:var(--cor-primaria);margin-bottom:20px;"></div>
+          <button onclick="reiniciarQuiz()" style="background:var(--cor-primaria);color:white;border:none;border-radius:10px;padding:14px 32px;font-size:1rem;font-weight:700;cursor:pointer;width:100%;max-width:320px;transition:background 0.2s;">
+            🔄 Tentar Novamente
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <style>
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .opcao-btn {
+      background: #f8f9fa;
+      border: 2px solid #dee2e6;
+      border-radius: 10px;
+      padding: 14px 18px;
+      font-size: 0.97rem;
+      text-align: left;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      font-family: inherit;
+    }
+    .opcao-btn:hover:not(:disabled) {
+      border-color: var(--cor-primaria);
+      background: #edf2ff;
+    }
+    .opcao-btn.correta  { border-color: #27ae60; background: #d4edda; color: #155724; }
+    .opcao-btn.errada   { border-color: #c0392b; background: #f8d7da; color: #721c24; }
+    .opcao-btn.revelada { border-color: #27ae60; background: #d4edda; color: #155724; }
+    .opcao-btn:disabled { cursor: not-allowed; }
+    #quiz-btn-next:hover { background: #012a60; }
+  </style>
+
+  <script>
+    const perguntas = [
+      {
+        pergunta: "Uma pessoa sente dor forte no peito com falta de ar. Qual a atitude correta?",
+        opcoes: [
+          "Esperar para ver se passa",
+          "Ligar 192 (SAMU) ou ir imediatamente ao pronto-socorro",
+          "Agendar consulta na UBS",
+          "Tomar um analgésico e descansar"
+        ],
+        correta: 1,
+        explicacao: "💔 Dor forte no peito com falta de ar é uma EMERGÊNCIA. Pode ser infarto ou outro problema grave. Ligue 192 (SAMU) ou vá imediatamente ao pronto-socorro — cada minuto conta!"
+      },
+      {
+        pergunta: "Para renovar a receita de um remédio de uso contínuo (ex.: pressão alta), onde devo ir?",
+        opcoes: [
+          "Pronto-socorro — é mais rápido",
+          "UBS do bairro ou consulta agendada com o médico",
+          "Ligar 192 (SAMU)",
+          "Só o hospital pode renovar receitas"
+        ],
+        correta: 1,
+        explicacao: "💊 Renovação de receita não é emergência! Procure a UBS do seu bairro com a receita anterior ou agende uma consulta. Usar o pronto-socorro para isso prejudica quem realmente precisa de atendimento urgente."
+      },
+      {
+        pergunta: "Um paciente apresenta boca torta, fraqueza em um lado do corpo e fala travada. O que esses sinais indicam?",
+        opcoes: [
+          "Cansaço excessivo — basta descansar",
+          "Sinais de AVC — buscar atendimento imediatamente",
+          "Reação à um alimento — tomar antialérgico",
+          "Enxaqueca — ir à UBS na próxima manhã"
+        ],
+        correta: 1,
+        explicacao: "🥴 Boca torta, fraqueza em um lado e fala travada são sinais clássicos de AVC (Acidente Vascular Cerebral). É classificado como MUITO URGENTE pelo Protocolo de Manchester. Ligue 192 imediatamente — o tratamento dentro das primeiras horas pode salvar a vida!"
+      },
+      {
+        pergunta: "Qual é o número do SAMU (atendimento a emergências médicas) no Brasil?",
+        opcoes: [
+          "190",
+          "193",
+          "192",
+          "136"
+        ],
+        correta: 2,
+        explicacao: "🚑 O SAMU é o 192! Lembre: 190 = Polícia Militar, 193 = Bombeiros, 136 = Central do SUS. Guarde esses números — eles podem salvar sua vida ou a de alguém próximo."
+      },
+      {
+        pergunta: "Uma criança tem febre de 37,8 °C, coriza e tosse leve há 2 dias, sem dificuldade para respirar. Onde buscar atendimento?",
+        opcoes: [
+          "Pronto-socorro — qualquer febre em criança é emergência",
+          "Ligar 192 imediatamente",
+          "UBS ou consulta com pediatra — é um quadro de resfriado leve",
+          "Farmácia e aguardar piorar"
+        ],
+        correta: 2,
+        explicacao: "🤧 Febre baixa com coriza e tosse leve em criança é sinal de resfriado comum. Não há necessidade de pronto-socorro! Procure a UBS ou pediatra. Reserve a emergência para casos como febre muito alta, dificuldade respiratória ou convulsão."
+      }
+    ];
+
+    let atual = 0;
+    let acertos = 0;
+    let respondeu = false;
+
+    function iniciarQuiz() {
+      atual = 0;
+      acertos = 0;
+      respondeu = false;
+      document.getElementById('quiz-resultado').style.display = 'none';
+      document.getElementById('quiz-card').style.display = 'block';
+      renderPergunta();
+    }
+
+    function renderPergunta() {
+      const q = perguntas[atual];
+      respondeu = false;
+
+      // Atualiza progresso
+      const pct = (atual / perguntas.length) * 100;
+      document.getElementById('quiz-progress-bar').style.width = pct + '%';
+      document.getElementById('quiz-label-current').textContent = `Pergunta ${atual + 1} de ${perguntas.length}`;
+      document.getElementById('quiz-score-label').textContent = `✅ Acertos: ${acertos}`;
+
+      // Pergunta
+      document.getElementById('quiz-pergunta').textContent = q.pergunta;
+
+      // Opções
+      const cont = document.getElementById('quiz-opcoes');
+      cont.innerHTML = '';
+      q.opcoes.forEach((op, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'opcao-btn';
+        btn.textContent = op;
+        btn.onclick = () => responder(i, btn);
+        cont.appendChild(btn);
+      });
+
+      // Feedback e botão
+      const fb = document.getElementById('quiz-feedback');
+      fb.style.display = 'none';
+      fb.textContent = '';
+
+      const btnNext = document.getElementById('quiz-btn-next');
+      btnNext.style.display = 'none';
+      btnNext.textContent = atual < perguntas.length - 1 ? 'Próxima Pergunta →' : 'Ver Resultado 🎯';
+
+      // Animação
+      const card = document.getElementById('quiz-card');
+      card.style.animation = 'none';
+      void card.offsetWidth;
+      card.style.animation = 'fadeInUp 0.4s ease';
+    }
+
+    function responder(idx, btnClicado) {
+      if (respondeu) return;
+      respondeu = true;
+
+      const q = perguntas[atual];
+      const botoes = document.querySelectorAll('.opcao-btn');
+
+      botoes.forEach(b => b.disabled = true);
+
+      if (idx === q.correta) {
+        btnClicado.classList.add('correta');
+        acertos++;
+      } else {
+        btnClicado.classList.add('errada');
+        botoes[q.correta].classList.add('revelada');
+      }
+
+      // Feedback
+      const fb = document.getElementById('quiz-feedback');
+      fb.textContent = q.explicacao;
+      fb.style.display = 'block';
+      fb.style.background = idx === q.correta ? '#d4edda' : '#fff3cd';
+      fb.style.color = idx === q.correta ? '#155724' : '#856404';
+      fb.style.border = `1.5px solid ${idx === q.correta ? '#27ae60' : '#ffc107'}`;
+
+      document.getElementById('quiz-btn-next').style.display = 'block';
+      document.getElementById('quiz-score-label').textContent = `✅ Acertos: ${acertos}`;
+    }
+
+    function proximaPergunta() {
+      atual++;
+      if (atual < perguntas.length) {
+        renderPergunta();
+      } else {
+        mostrarResultado();
+      }
+    }
+
+    function mostrarResultado() {
+      document.getElementById('quiz-card').style.display = 'none';
+      const res = document.getElementById('quiz-resultado');
+      res.style.display = 'block';
+
+      const pct = Math.round((acertos / perguntas.length) * 100);
+      document.getElementById('quiz-progress-bar').style.width = '100%';
+      document.getElementById('quiz-label-current').textContent = `Quiz concluído!`;
+      document.getElementById('quiz-score-label').textContent = `✅ Acertos: ${acertos}`;
+      document.getElementById('resultado-pontos').textContent = `${acertos} / ${perguntas.length} acertos (${pct}%)`;
+
+      let emoji, titulo, msg;
+      if (pct === 100) {
+        emoji = '🏆'; titulo = 'Parabéns! Você é um especialista!';
+        msg = 'Incrível! Você acertou tudo! Com esse conhecimento, você sabe exatamente quando buscar a emergência e quando utilizar outros serviços de saúde.';
+      } else if (pct >= 60) {
+        emoji = '👍'; titulo = 'Muito bem!';
+        msg = 'Você tem um bom conhecimento sobre triagem hospitalar. Releia as orientações para fixar os casos em que errou e compartilhe com amigos e familiares!';
+      } else {
+        emoji = '📚'; titulo = 'Continue aprendendo!';
+        msg = 'Ainda há espaço para aprender mais! Leia as orientações desta página com atenção — saber a hora certa de buscar cada serviço pode salvar vidas.';
+      }
+
+      document.getElementById('resultado-emoji').textContent = emoji;
+      document.getElementById('resultado-titulo').textContent = titulo;
+      document.getElementById('resultado-msg').textContent = msg;
+
+      res.style.animation = 'none';
+      void res.offsetWidth;
+      res.style.animation = 'fadeInUp 0.5s ease';
+    }
+
+    function reiniciarQuiz() { iniciarQuiz(); }
+
+    // Inicia ao carregar
+    iniciarQuiz();
+  </script>
+  <!-- =================== FIM DO QUIZ =================== -->
+
   <footer>
     <p>Triagem Hospitalar &nbsp;|&nbsp; Fontes: Ministério da Saúde · CFM · Protocolo de Manchester</p>
   </footer>
